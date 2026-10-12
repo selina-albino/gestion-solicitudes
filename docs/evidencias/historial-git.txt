@@ -1,0 +1,30 @@
+*   332ba3c Merge pull request #4 from selina-albino/docs/entregables
+|\  
+| * 3ac6ab3 docs: evidencia del historial de cambios
+| * 6a12d3c docs: casos de prueba, matriz de trazabilidad y guía de entrega
+| * ec6f3e0 docs: README con instalación, ejecución, pruebas y flujo del equipo
+* | af0c1a0 Merge pull request #3 from selina-albino/feature/pruebas
+|\| 
+| * ce46f84 test: integración, casos de error y aceptación del flujo completo
+| * a39b2b8 test: pruebas unitarias del generador, servicio y repositorio
+* | dd631c2 Merge pull request #2 from selina-albino/feature/interfaz-web
+|\| 
+| * 74b95d7 feat(web): vistas de registro, consulta y detalle con historial
+| * dc6edbe feat(web): rutas, controlador y validación de formularios
+* | a37384c Merge pull request #1 from selina-albino/feature/dominio-solicitudes
+|\| 
+| * 7a233b2 feat(dominio): servicio con registro, consulta, asignación de técnico y cambio de estado
+| * 0d9d1be feat(dominio): modelo de solicitud, estados, código único y repositorio JSON
+|/  
+ \ 
+  * 2ec5f1f chore: estructura base de Laravel 12 sin credenciales
+* 72c1d2b docs: evidencia del historial de cambios
+* 1146388 docs: casos de prueba, matriz de trazabilidad y guía de entrega
+* 4c86cd8 docs: README con instalación, ejecución, pruebas y flujo del equipo
+* afaf1a9 test: integración, casos de error y aceptación del flujo completo
+* 1c9a66a test: pruebas unitarias del generador, servicio y repositorio
+* 4723fc5 feat(web): vistas de registro, consulta y detalle con historial
+* b5509e9 feat(web): rutas, controlador y validación de formularios
+* 5da152f feat(dominio): servicio con registro, consulta, asignación de técnico y cambio de estado
+* cf63ec8 feat(dominio): modelo de solicitud, estados, código único y repositorio JSON
+* dbd2d7c chore: estructura base de Laravel 12 sin credenciales
