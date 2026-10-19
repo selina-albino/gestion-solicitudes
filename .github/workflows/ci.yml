@@ -1,0 +1,117 @@
+name: CI - Gestion de Solicitudes
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  integracion:
+    name: Integracion continua
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Preparar PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          tools: composer:v2
+          coverage: none
+
+      - name: Instalar dependencias
+        run: |
+          cp .env.example .env
+          composer require --dev phpstan/phpstan:^2.1 --no-update --no-interaction
+          composer install --no-interaction --prefer-dist --no-progress
+          php artisan key:generate --ansi
+          mkdir -p reportes
+
+      - name: Revisar sintaxis PHP
+        run: |
+          set -o pipefail
+          find app routes tests config -name '*.php' -print0 | xargs -0 -n1 php -l | tee reportes/sintaxis.txt
+
+      - name: Ejecutar pruebas automaticas
+        run: |
+          set -o pipefail
+          vendor/bin/phpunit --log-junit reportes/pruebas-junit.xml --testdox 2>&1 | tee reportes/pruebas.txt
+
+      - name: Analisis estatico (PHPStan nivel 5)
+        run: |
+          set -o pipefail
+          vendor/bin/phpstan analyse app --level=5 --no-progress --memory-limit=1G 2>&1 | tee reportes/analisis-estatico.txt
+
+      - name: Revisar dependencias vulnerables
+        run: |
+          set -o pipefail
+          composer audit --no-interaction 2>&1 | tee reportes/dependencias.txt
+
+      - name: Buscar credenciales en el repositorio
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Resumen de la ejecucion
+        if: always()
+        run: |
+          {
+            echo "## Reporte de integracion #${{ github.run_number }}"
+            echo ""
+            echo "- Rama: \`${{ github.ref_name }}\`"
+            echo "- Commit: \`${{ github.sha }}\`"
+            echo "- Resultado del job: **${{ job.status }}**"
+            echo ""
+            echo "### Pruebas"
+            echo '```'
+            tail -n 25 reportes/pruebas.txt 2>/dev/null || echo "No se ejecutaron"
+            echo '```'
+            echo "### Analisis estatico"
+            echo '```'
+            tail -n 10 reportes/analisis-estatico.txt 2>/dev/null || echo "No se ejecuto"
+            echo '```'
+            echo "### Dependencias"
+            echo '```'
+            cat reportes/dependencias.txt 2>/dev/null || echo "No se ejecuto"
+            echo '```'
+          } | tee reportes/resumen.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Guardar reportes como artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-ci-${{ github.run_number }}
+          path: reportes/
+          retention-days: 30
+
+  version-liberable:
+    name: Version liberable
+    needs: integracion
+    if: success() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Empaquetar la version
+        run: |
+          mkdir -p dist
+          git archive --format=zip -o dist/gestion-solicitudes-${{ github.run_number }}.zip HEAD
+          echo "Version ${{ github.run_number }} - commit ${{ github.sha }} - integracion aprobada" > dist/VERSION.txt
+
+      - name: Publicar paquete liberable
+        uses: actions/upload-artifact@v4
+        with:
+          name: version-liberable-${{ github.run_number }}
+          path: dist/
+          retention-days: 30
