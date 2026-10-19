@@ -13,7 +13,7 @@ use App\Solicitudes\Excepciones\SolicitudNoEncontrada;
 use App\Solicitudes\Prioridad;
 use App\Solicitudes\ServicioSolicitudes;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Illuminate\Contracts\View\View;
 
 class SolicitudController extends Controller
 {
