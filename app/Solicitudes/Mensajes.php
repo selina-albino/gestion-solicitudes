@@ -33,6 +33,7 @@ final class Mensajes
 
     public static function de(string $campo, string $regla): string
     {
-        return self::CAMPOS["{$campo}.{$regla}"];
+        // D-05: una clave que no existe ya no rompe la página con un error interno.
+        return self::CAMPOS["{$campo}.{$regla}"] ?? "El dato \"{$campo}\" no es válido.";
     }
 }

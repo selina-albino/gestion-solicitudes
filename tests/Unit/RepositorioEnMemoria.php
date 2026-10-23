@@ -34,4 +34,9 @@ final class RepositorioEnMemoria implements RepositorioSolicitudes
 
         return isset($this->datos[$codigo]);
     }
+
+    public function todas(): array
+    {
+        return array_values(array_map(fn (array $d) => Solicitud::fromArray($d), $this->datos));
+    }
 }
