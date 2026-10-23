@@ -1,4 +1,4 @@
-# Gestión de Solicitudes — Incremento 1
+# Gestión de Solicitudes — v1.1
 
 Aplicación web en **Laravel 12** para registrar solicitudes de soporte, consultarlas por código, asignar un técnico y actualizar su estado, conservando un historial de cambios.
 
@@ -14,6 +14,11 @@ Aplicación web en **Laravel 12** para registrar solicitudes de soporte, consult
 | RF6 | Historial de cambios | Página de la solicitud |
 | RF7 | Validar campos obligatorios | Todos los formularios |
 | RF8 | Mensajes comprensibles ante datos incorrectos | Todos los formularios |
+| RF9 | Solicitudes críticas no atendidas en 4 horas quedan **vencidas** | Página de la solicitud (plazo y aviso «VENCIDA») |
+| RF10 | Revisión automática de vencimientos cada minuto | `php artisan solicitudes:marcar-vencidas` |
+| RF11 | Indicadores de seguimiento | `php artisan solicitudes:indicadores` |
+
+Cambios de esta versión: [`docs/notas-version-1.1.md`](docs/notas-version-1.1.md).
 
 ### Estados y transiciones
 
@@ -45,6 +50,14 @@ php artisan serve
 ```
 
 Abrir http://localhost:8000
+
+Para que los vencimientos se marquen solos, en otra terminal:
+
+```bash
+php artisan schedule:work      # ejecuta solicitudes:marcar-vencidas cada minuto
+```
+
+Aunque no esté corriendo, cada vez que se abre una solicitud se revisa su plazo.
 
 ## Pruebas
 
@@ -78,10 +91,10 @@ docs/                       Casos de prueba, matriz de trazabilidad, historial
 
 - `main` está **protegida**: no se hace push directo; todo entra por Pull Request.
 - Cada cambio se hace en una rama `feature/<nombre>` o `docs/<nombre>`.
-- Cada Pull Request necesita **la aprobación de otra persona (revisor invitado)** antes de integrarse.
+- Cada Pull Request lleva un comentario de revisión antes de integrarse. El trabajo es individual, así que la revisión la hace la autora.
 - Mensajes de commit con el formato `tipo(alcance): descripción` (`feat`, `fix`, `test`, `docs`, `chore`).
 
-Configuración de la protección en GitHub: *Settings → Branches → Add branch ruleset* sobre `main`, activando *Require a pull request before merging* con *Required approvals: 1*.
+Configuración de la protección en GitHub: *Settings → Branches* sobre `main`, activando *Require a pull request before merging* (sin aprobaciones obligatorias, porque GitHub no permite aprobar los propios Pull Requests).
 
 ## Credenciales
 

@@ -1,0 +1,86 @@
+PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.6
+Configuration: /root/base-main/phpunit.xml
+
+
+   PASS  Tests\Unit\GeneradorCodigoTest
+  ✓ pu01 genera codigo con formato y fecha
+  ✓ pu02 genera codigos distintos en muchas llamadas
+  ✓ normaliza codigo escrito en minusculas y con espacios
+
+   PASS  Tests\Unit\RepositorioJsonTest
+  ✓ pu09 guarda y recupera la solicitud con su historial                 0.01s  
+
+   PASS  Tests\Unit\ServicioSolicitudesTest
+  ✓ pu03 registra solicitud en estado registrada con historial
+  ✓ pe01 rechaza registro con datos incompletos y explica cada campo
+  ✓ pu04 asignar tecnico pasa a asignada y deja historial
+  ✓ pu05 rechaza transicion de estado no permitida con mensaje claro
+  ✓ pu06 cambio de estado valido guarda comentario en historial
+  ✓ pe02 consultar codigo inexistente lanza excepcion entendible
+  ✓ pu07 reintenta si el codigo generado ya existe
+  ✓ pu08 rechaza tecnico que no esta en la lista
+
+   PASS  Tests\Feature\ActualizarSolicitudTest
+  ✓ pi02 asigna tecnico cambia estado y conserva historial               0.15s  
+  ✓ cambio de estado no permitido muestra mensaje y no modifica          0.01s  
+
+   PASS  Tests\Feature\CodigoInexistenteTest
+  ✓ pe02 consultar codigo inexistente informa que no existe              0.02s  
+  ✓ abrir la url de un codigo inexistente tambien informa                0.01s  
+  ✓ codigo con formato incorrecto muestra ejemplo                        0.01s  
+
+   PASS  Tests\Feature\DatosIncompletosTest
+  ✓ pe01 formulario vacio muestra un mensaje claro por campo y no guard… 0.03s  
+  ✓ valores fuera de la lista son rechazados                             0.01s  
+
+   PASS  Tests\Feature\RegistrarSolicitudTest
+  ✓ pi01 registra por http guarda en json y muestra el codigo            0.02s  
+
+   PASS  Tests\Acceptance\FlujoCompletoTest
+  ✓ pa01 registrar consultar asignar resolver y cerrar                   0.04s  
+
+  Tests:    21 passed (109 assertions)
+  Duration: 0.40s
+
+Time: 00:00.337, Memory: 32.00 MB
+
+Actualizar Solicitud (Tests\Feature\ActualizarSolicitud)
+ ✔ Pi02 asigna tecnico cambia estado y conserva historial
+ ✔ Cambio de estado no permitido muestra mensaje y no modifica
+
+Codigo Inexistente (Tests\Feature\CodigoInexistente)
+ ✔ Pe02 consultar codigo inexistente informa que no existe
+ ✔ Abrir la url de un codigo inexistente tambien informa
+ ✔ Codigo con formato incorrecto muestra ejemplo
+
+Datos Incompletos (Tests\Feature\DatosIncompletos)
+ ✔ Pe01 formulario vacio muestra un mensaje claro por campo y no guarda
+ ✔ Valores fuera de la lista son rechazados
+
+Flujo Completo (Tests\Acceptance\FlujoCompleto)
+ ✔ Pa01 registrar consultar asignar resolver y cerrar
+
+Generador Codigo (Tests\Unit\GeneradorCodigo)
+ ✔ Pu01 genera codigo con formato y fecha
+ ✔ Pu02 genera codigos distintos en muchas llamadas
+ ✔ Normaliza codigo escrito en minusculas y con espacios
+
+Registrar Solicitud (Tests\Feature\RegistrarSolicitud)
+ ✔ Pi01 registra por http guarda en json y muestra el codigo
+
+Repositorio Json (Tests\Unit\RepositorioJson)
+ ✔ Pu09 guarda y recupera la solicitud con su historial
+
+Servicio Solicitudes (Tests\Unit\ServicioSolicitudes)
+ ✔ Pu03 registra solicitud en estado registrada con historial
+ ✔ Pe01 rechaza registro con datos incompletos y explica cada campo
+ ✔ Pu04 asignar tecnico pasa a asignada y deja historial
+ ✔ Pu05 rechaza transicion de estado no permitida con mensaje claro
+ ✔ Pu06 cambio de estado valido guarda comentario en historial
+ ✔ Pe02 consultar codigo inexistente lanza excepcion entendible
+ ✔ Pu07 reintenta si el codigo generado ya existe
+ ✔ Pu08 rechaza tecnico que no esta en la lista
+
+OK (21 tests, 109 assertions)

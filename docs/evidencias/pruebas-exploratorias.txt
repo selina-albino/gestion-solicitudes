@@ -1,0 +1,19 @@
+== v1.0
+Zona horaria de la app: UTC
+creada_en guardada:     2026-10-23T01:47:34+00:00
+Hora real en Bolivia:   2026-10-22T21:47:34-04:00
+Comentario de 300 caracteres: ACEPTADO por el servicio (detalle de 354 caracteres)
+Archivo JSON dañado:    HTTP 500
+Mensajes::de clave inexistente: ErrorException -> Undefined array key "comentario.required"
+
+== v1.1
+Zona horaria de la app: America/La_Paz
+creada_en guardada:     2026-10-22T21:53:40-04:00
+Hora real en Bolivia:   2026-10-22T21:53:40-04:00
+Comentario de 300 caracteres: rechazado -> El comentario no puede superar los 255 caracteres.
+Archivo JSON dañado:    HTTP 500
+Mensajes::de clave inexistente: sin error
+
+== Guardados simultáneos (8 procesos x 25 solicitudes)
+base-main: esperadas=200 guardadas=1 perdidas=199 (99.5%)
+gestion-solicitudes: esperadas=200 guardadas=200 perdidas=0 (0.0%)

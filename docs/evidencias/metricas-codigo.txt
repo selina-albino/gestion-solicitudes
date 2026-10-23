@@ -1,0 +1,29 @@
+== v1.0
+Archivos analizados: 17 | Líneas de código: 650 | Métodos: 55
+Complejidad promedio: 1.96 | máxima: 16 | métodos con complejidad > 10: 1
+Métodos más complejos:
+  ServicioSolicitudes::validarRegistro                    16
+  ServicioSolicitudes::asignarTecnico                     7
+  ServicioSolicitudes::cambiarEstado                      6
+  RepositorioJson::leerTodas                              5
+  RepositorioJson::escribirTodas                          5
+  RepositorioJson::buscar                                 3
+Bloques de 4 líneas repetidos: 1
+  - AsignarTecnicoRequest.php, CambiarEstadoRequest.php, RegistrarSolicitudRequest.php :: public function authorize(): bool
+Límites de validación escritos en las dos capas (formulario y servicio): 4 de 5
+Repeticiones de Rule::in(array_column(...cases())): 3
+
+== v1.1
+Archivos analizados: 19 | Líneas de código: 898 | Métodos: 74
+Complejidad promedio: 2.14 | máxima: 16 | métodos con complejidad > 10: 1
+Métodos más complejos:
+  ServicioSolicitudes::validarRegistro                    16
+  ServicioSolicitudes::cambiarEstado                      9
+  ServicioSolicitudes::asignarTecnico                     7
+  Indicadores::minutosPromedioRespuesta                   6
+  Indicadores::abiertasPorEstado                          5
+  Solicitud::fromArray                                    5
+Bloques de 4 líneas repetidos: 1
+  - AsignarTecnicoRequest.php, CambiarEstadoRequest.php, RegistrarSolicitudRequest.php :: public function authorize(): bool
+Límites de validación escritos en las dos capas (formulario y servicio): 5 de 5
+Repeticiones de Rule::in(array_column(...cases())): 3
