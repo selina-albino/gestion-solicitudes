@@ -19,4 +19,14 @@ return [
         'Diego Vargas',
     ],
 
+    /*
+    | RF9 · Vencimiento: las solicitudes de esta prioridad que no pasen a
+    | "En proceso" dentro de estas horas quedan marcadas como vencidas.
+    | Son horas corridas (no se descuentan noches ni feriados).
+    */
+    'vencimiento' => [
+        'prioridad' => 'critica',
+        'horas' => (int) env('SOLICITUDES_HORAS_VENCIMIENTO', 4),
+    ],
+
 ];

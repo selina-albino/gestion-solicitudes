@@ -1,0 +1,7 @@
+1 solicitud marcada como vencida:
++---------------------+----------+-------------+------------------+
+| Código              | Estado   | Técnico     | Plazo vencido    |
++---------------------+----------+-------------+------------------+
+| SOL-20261022-HBFXG4 | Asignada | Carla Rojas | 22/10/2026 20:42 |
++---------------------+----------+-------------+------------------+
+No hay solicitudes nuevas para marcar como vencidas.

@@ -50,6 +50,7 @@
         th, td { text-align: left; padding: .5rem; border-bottom: 1px solid var(--borde); vertical-align: top; }
         th { color: var(--texto-suave); }
         .tabla-scroll { overflow-x: auto; }
+        .etiqueta-vencida { color: var(--error); text-transform: uppercase; letter-spacing: .03em; }
     </style>
 </head>
 <body>

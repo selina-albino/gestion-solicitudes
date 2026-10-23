@@ -1,0 +1,39 @@
+ ✔ Pi02 asigna tecnico cambia estado y conserva historial
+ ✔ Cambio de estado no permitido muestra mensaje y no modifica
+ ✔ Pe02 consultar codigo inexistente informa que no existe
+ ✔ Abrir la url de un codigo inexistente tambien informa
+ ✔ Codigo con formato incorrecto muestra ejemplo
+ ✔ Pe01 formulario vacio muestra un mensaje claro por campo y no guarda
+ ✔ Valores fuera de la lista son rechazados
+ ✘ Pd02 guardados simultaneos no pierden datos
+ ✘ Pd03 servicio rechaza comentario demasiado largo
+ ✘ Pd05 mensaje inexistente devuelve texto generico
+ ✔ Pa01 registrar consultar asignar resolver y cerrar
+ ✔ Pu01 genera codigo con formato y fecha
+ ✔ Pu02 genera codigos distintos en muchas llamadas
+ ✔ Normaliza codigo escrito en minusculas y con espacios
+ ✔ Pi01 registra por http guarda en json y muestra el codigo
+ ✔ Pu09 guarda y recupera la solicitud con su historial
+ ✔ Pu03 registra solicitud en estado registrada con historial
+ ✔ Pe01 rechaza registro con datos incompletos y explica cada campo
+ ✔ Pu04 asignar tecnico pasa a asignada y deja historial
+ ✔ Pu05 rechaza transicion de estado no permitida con mensaje claro
+ ✔ Pu06 cambio de estado valido guarda comentario en historial
+ ✔ Pe02 consultar codigo inexistente lanza excepcion entendible
+ ✔ Pu07 reintenta si el codigo generado ya existe
+ ✔ Pu08 rechaza tecnico que no esta en la lista
+ ✘ Pi04 pagina muestra plazo y marca vencida
+ ✘ Pi05 comando marca vencidas
+ ✘ Pi06 comando esta programado cada minuto
+ ✘ Pd01 fechas en hora de bolivia
+ ✘ Pu10 critica sin atender pasadas 4 horas queda vencida
+ ✘ Pu11 justo en el limite todavia no vence
+ ✘ Pu12 critica atendida a tiempo no vence
+ ✘ Pu13 otras prioridades no vencen
+ ✘ Pu14 asignar tecnico no detiene el plazo
+ ✘ Pu15 marcar vencidas no duplica
+ ✘ Pu16 cancelada antes del plazo no vence
+ ✘ Pu17 vencida se puede atender y cerrar sin perder la marca
+ ✘ Pu18 lee solicitudes guardadas por la version anterior
+ ✘ Pa02 critica a tiempo y critica vencida
+Tests: 38, Assertions: 124, Errors: 12, Failures: 5, Warnings: 3, Deprecations: 1.

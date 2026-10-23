@@ -17,7 +17,11 @@ final class ServicioSolicitudes
 {
     private const INTENTOS_CODIGO = 10;
 
+    private const LARGO_MAXIMO_COMENTARIO = 255;
+
     private Closure $reloj;
+
+    private PoliticaVencimiento $vencimiento;
 
     /** @param  list<string>  $tecnicos */
     public function __construct(
@@ -25,8 +29,10 @@ final class ServicioSolicitudes
         private readonly GeneradorCodigo $generador,
         private readonly array $tecnicos,
         ?Closure $reloj = null,
+        ?PoliticaVencimiento $vencimiento = null,
     ) {
         $this->reloj = $reloj ?? fn () => new DateTimeImmutable;
+        $this->vencimiento = $vencimiento ?? new PoliticaVencimiento;
     }
 
     /** @param  array<string, mixed>  $datos */
@@ -61,8 +67,38 @@ final class ServicioSolicitudes
     public function consultar(string $codigo): Solicitud
     {
         $codigo = GeneradorCodigo::normalizar($codigo);
+        $solicitud = $this->repositorio->buscar($codigo) ?? throw new SolicitudNoEncontrada($codigo);
 
-        return $this->repositorio->buscar($codigo) ?? throw new SolicitudNoEncontrada($codigo);
+        // RF9: se revisa en cada consulta (y antes de asignar o cambiar estado),
+        // así la marca es correcta aunque la tarea programada no se haya ejecutado.
+        $this->aplicarVencimiento($solicitud);
+
+        return $solicitud;
+    }
+
+    /**
+     * RF9 · Revisa todas las solicitudes y marca las críticas que pasaron el plazo.
+     * La ejecuta el comando programado `solicitudes:marcar-vencidas`.
+     *
+     * @return list<Solicitud> las que se marcaron en esta ejecución
+     */
+    public function marcarVencidas(): array
+    {
+        return array_values(array_filter(
+            $this->repositorio->todas(),
+            fn (Solicitud $solicitud) => $this->aplicarVencimiento($solicitud),
+        ));
+    }
+
+    /** RF9 · Hasta cuándo se puede empezar a atender (null si la regla no aplica). */
+    public function limiteAtencion(Solicitud $solicitud): ?DateTimeImmutable
+    {
+        return $this->vencimiento->limite($solicitud)?->setTimezone($this->ahora()->getTimezone());
+    }
+
+    public function horasLimiteAtencion(): int
+    {
+        return $this->vencimiento->horas();
     }
 
     public function asignarTecnico(string $codigo, string $tecnico): Solicitud
@@ -113,6 +149,12 @@ final class ServicioSolicitudes
                 ?? throw new DatosInvalidos(['estado' => Mensajes::de('estado', 'in')]);
         }
 
+        // D-03: el límite del comentario se valida también aquí, no solo en el formulario.
+        $comentario = trim((string) $comentario);
+        if (mb_strlen($comentario) > self::LARGO_MAXIMO_COMENTARIO) {
+            throw new DatosInvalidos(['comentario' => Mensajes::de('comentario', 'max')]);
+        }
+
         $solicitud = $this->consultar($codigo);
         $anterior = $solicitud->estado;
 
@@ -126,8 +168,12 @@ final class ServicioSolicitudes
 
         $solicitud->estado = $nuevo;
 
+        // RF9: la primera vez que llega a En proceso queda registrada la hora de atención.
+        if ($nuevo === Estado::EnProceso && $solicitud->atendidaEn === null) {
+            $solicitud->atendidaEn = $this->ahora()->format(DATE_ATOM);
+        }
+
         $detalle = "Estado cambiado de {$anterior->etiqueta()} a {$nuevo->etiqueta()}.";
-        $comentario = trim((string) $comentario);
         if ($comentario !== '') {
             $detalle .= " Comentario: {$comentario}";
         }
@@ -142,6 +188,29 @@ final class ServicioSolicitudes
     public function tecnicosDisponibles(): array
     {
         return $this->tecnicos;
+    }
+
+    /** Marca la solicitud como vencida si corresponde. Devuelve true si la marcó ahora. */
+    private function aplicarVencimiento(Solicitud $solicitud): bool
+    {
+        $ahora = $this->ahora();
+
+        if (! $this->vencimiento->debeVencer($solicitud, $ahora)) {
+            return false;
+        }
+
+        $limite = $this->limiteAtencion($solicitud);
+        $solicitud->vencidaEn = $limite->format(DATE_ATOM);
+        $solicitud->registrarCambio(
+            $ahora->format(DATE_ATOM),
+            'Vencimiento',
+            "Solicitud {$solicitud->prioridad->etiqueta()} vencida: no fue atendida dentro de "
+                ."{$this->vencimiento->horas()} horas (plazo hasta {$limite->format('d/m/Y H:i')}).",
+            $solicitud->estado,
+        );
+        $this->repositorio->guardar($solicitud);
+
+        return true;
     }
 
     /** @param  array<string, mixed>  $datos */

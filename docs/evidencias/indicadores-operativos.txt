@@ -1,0 +1,19 @@
+Datos simulados: 60 solicitudes del 01/10 al 22/10/2026 (semilla 2026)
+Solicitudes abiertas por estado
++------------+----------+
+| Estado     | Cantidad |
++------------+----------+
+| Registrada | 6        |
+| Asignada   | 4        |
+| En proceso | 9        |
+| Resuelta   | 8        |
++------------+----------+
++------------------------------------------------------+--------+
+| Indicador                                            | Valor  |
++------------------------------------------------------+--------+
+| Tiempo promedio de respuesta (registro → En proceso) | 6,79 h |
+| Tiempo promedio de respuesta, solo críticas          | 2,84 h |
+| Solicitudes reabiertas (Resuelta → En proceso)       | 4      |
+| Críticas registradas / vencidas                      | 8 / 2  |
+| Cumplimiento del plazo en críticas                   | 75,0 % |
++------------------------------------------------------+--------+

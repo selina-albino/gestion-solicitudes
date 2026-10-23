@@ -17,7 +17,15 @@ final class Solicitud
         public ?string $tecnico,
         public readonly string $creadaEn,
         public array $historial = [],
+        public ?string $atendidaEn = null,
+        public ?string $vencidaEn = null,
     ) {}
+
+    /** RF9 · Una vez vencida queda marcada aunque después se atienda (registro del incumplimiento). */
+    public function estaVencida(): bool
+    {
+        return $this->vencidaEn !== null;
+    }
 
     public function registrarCambio(string $fecha, string $accion, string $detalle, ?Estado $anterior): void
     {
@@ -42,6 +50,8 @@ final class Solicitud
             'tecnico' => $this->tecnico,
             'creada_en' => $this->creadaEn,
             'historial' => $this->historial,
+            'atendida_en' => $this->atendidaEn,
+            'vencida_en' => $this->vencidaEn,
         ];
     }
 
@@ -57,6 +67,9 @@ final class Solicitud
             tecnico: $datos['tecnico'] ?? null,
             creadaEn: $datos['creada_en'],
             historial: $datos['historial'] ?? [],
+            // Las solicitudes guardadas por la versión 1.0 no tienen estos campos.
+            atendidaEn: $datos['atendida_en'] ?? null,
+            vencidaEn: $datos['vencida_en'] ?? null,
         );
     }
 }

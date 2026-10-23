@@ -1,0 +1,142 @@
+PHPUnit 11.5.57 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.3.6
+Configuration: /root/gestion-solicitudes/phpunit.xml
+
+
+   PASS  Tests\Unit\DefectosCorregidosTest
+  ✓ pd02 guardados simultaneos no pierden datos                          0.12s  
+  ✓ pd03 servicio rechaza comentario demasiado largo
+  ✓ pd05 mensaje inexistente devuelve texto generico
+
+   PASS  Tests\Unit\GeneradorCodigoTest
+  ✓ pu01 genera codigo con formato y fecha                               0.01s  
+  ✓ pu02 genera codigos distintos en muchas llamadas
+  ✓ normaliza codigo escrito en minusculas y con espacios
+
+   PASS  Tests\Unit\IndicadoresTest
+  ✓ pu19 calcula abiertas respuesta reabiertas y cumplimiento            0.01s  
+
+   PASS  Tests\Unit\RepositorioJsonTest
+  ✓ pu09 guarda y recupera la solicitud con su historial                 0.01s  
+
+   PASS  Tests\Unit\ServicioSolicitudesTest
+  ✓ pu03 registra solicitud en estado registrada con historial
+  ✓ pe01 rechaza registro con datos incompletos y explica cada campo
+  ✓ pu04 asignar tecnico pasa a asignada y deja historial
+  ✓ pu05 rechaza transicion de estado no permitida con mensaje claro
+  ✓ pu06 cambio de estado valido guarda comentario en historial
+  ✓ pe02 consultar codigo inexistente lanza excepcion entendible
+  ✓ pu07 reintenta si el codigo generado ya existe
+  ✓ pu08 rechaza tecnico que no esta en la lista
+
+   PASS  Tests\Unit\VencimientoTest
+  ✓ pu10 critica sin atender pasadas 4 horas queda vencida
+  ✓ pu11 justo en el limite todavia no vence
+  ✓ pu12 critica atendida a tiempo no vence
+  ✓ pu13 otras prioridades no vencen
+  ✓ pu14 asignar tecnico no detiene el plazo
+  ✓ pu15 marcar vencidas no duplica
+  ✓ pu16 cancelada antes del plazo no vence
+  ✓ pu17 vencida se puede atender y cerrar sin perder la marca
+  ✓ pu18 lee solicitudes guardadas por la version anterior
+
+   PASS  Tests\Feature\ActualizarSolicitudTest
+  ✓ pi02 asigna tecnico cambia estado y conserva historial               0.16s  
+  ✓ cambio de estado no permitido muestra mensaje y no modifica          0.01s  
+
+   PASS  Tests\Feature\CodigoInexistenteTest
+  ✓ pe02 consultar codigo inexistente informa que no existe              0.02s  
+  ✓ abrir la url de un codigo inexistente tambien informa                0.01s  
+  ✓ codigo con formato incorrecto muestra ejemplo                        0.01s  
+
+   PASS  Tests\Feature\DatosIncompletosTest
+  ✓ pe01 formulario vacio muestra un mensaje claro por campo y no guard… 0.03s  
+  ✓ valores fuera de la lista son rechazados                             0.01s  
+
+   PASS  Tests\Feature\RegistrarSolicitudTest
+  ✓ pi01 registra por http guarda en json y muestra el codigo            0.02s  
+
+   PASS  Tests\Feature\VencimientoTest
+  ✓ pi04 pagina muestra plazo y marca vencida                            0.02s  
+  ✓ pi05 comando marca vencidas                                          0.06s  
+  ✓ pi06 comando esta programado cada minuto                             0.01s  
+  ✓ pd01 fechas en hora de bolivia                                       0.01s  
+
+   PASS  Tests\Acceptance\FlujoCompletoTest
+  ✓ pa01 registrar consultar asignar resolver y cerrar                   0.04s  
+
+   PASS  Tests\Acceptance\VencimientoCriticasTest
+  ✓ pa02 critica a tiempo y critica vencida                              0.04s  
+
+  Tests:    39 passed (189 assertions)
+  Duration: 0.69s
+
+Time: 00:00.639, Memory: 40.50 MB
+
+Actualizar Solicitud (Tests\Feature\ActualizarSolicitud)
+ ✔ Pi02 asigna tecnico cambia estado y conserva historial
+ ✔ Cambio de estado no permitido muestra mensaje y no modifica
+
+Codigo Inexistente (Tests\Feature\CodigoInexistente)
+ ✔ Pe02 consultar codigo inexistente informa que no existe
+ ✔ Abrir la url de un codigo inexistente tambien informa
+ ✔ Codigo con formato incorrecto muestra ejemplo
+
+Datos Incompletos (Tests\Feature\DatosIncompletos)
+ ✔ Pe01 formulario vacio muestra un mensaje claro por campo y no guarda
+ ✔ Valores fuera de la lista son rechazados
+
+Defectos Corregidos (Tests\Unit\DefectosCorregidos)
+ ✔ Pd02 guardados simultaneos no pierden datos
+ ✔ Pd03 servicio rechaza comentario demasiado largo
+ ✔ Pd05 mensaje inexistente devuelve texto generico
+
+Flujo Completo (Tests\Acceptance\FlujoCompleto)
+ ✔ Pa01 registrar consultar asignar resolver y cerrar
+
+Generador Codigo (Tests\Unit\GeneradorCodigo)
+ ✔ Pu01 genera codigo con formato y fecha
+ ✔ Pu02 genera codigos distintos en muchas llamadas
+ ✔ Normaliza codigo escrito en minusculas y con espacios
+
+Indicadores (Tests\Unit\Indicadores)
+ ✔ Pu19 calcula abiertas respuesta reabiertas y cumplimiento
+
+Registrar Solicitud (Tests\Feature\RegistrarSolicitud)
+ ✔ Pi01 registra por http guarda en json y muestra el codigo
+
+Repositorio Json (Tests\Unit\RepositorioJson)
+ ✔ Pu09 guarda y recupera la solicitud con su historial
+
+Servicio Solicitudes (Tests\Unit\ServicioSolicitudes)
+ ✔ Pu03 registra solicitud en estado registrada con historial
+ ✔ Pe01 rechaza registro con datos incompletos y explica cada campo
+ ✔ Pu04 asignar tecnico pasa a asignada y deja historial
+ ✔ Pu05 rechaza transicion de estado no permitida con mensaje claro
+ ✔ Pu06 cambio de estado valido guarda comentario en historial
+ ✔ Pe02 consultar codigo inexistente lanza excepcion entendible
+ ✔ Pu07 reintenta si el codigo generado ya existe
+ ✔ Pu08 rechaza tecnico que no esta en la lista
+
+Vencimiento (Tests\Feature\Vencimiento)
+ ✔ Pi04 pagina muestra plazo y marca vencida
+ ✔ Pi05 comando marca vencidas
+ ✔ Pi06 comando esta programado cada minuto
+ ✔ Pd01 fechas en hora de bolivia
+
+Vencimiento (Tests\Unit\Vencimiento)
+ ✔ Pu10 critica sin atender pasadas 4 horas queda vencida
+ ✔ Pu11 justo en el limite todavia no vence
+ ✔ Pu12 critica atendida a tiempo no vence
+ ✔ Pu13 otras prioridades no vencen
+ ✔ Pu14 asignar tecnico no detiene el plazo
+ ✔ Pu15 marcar vencidas no duplica
+ ✔ Pu16 cancelada antes del plazo no vence
+ ✔ Pu17 vencida se puede atender y cerrar sin perder la marca
+ ✔ Pu18 lee solicitudes guardadas por la version anterior
+
+Vencimiento Criticas (Tests\Acceptance\VencimientoCriticas)
+ ✔ Pa02 critica a tiempo y critica vencida
+
+OK (39 tests, 189 assertions)

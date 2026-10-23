@@ -45,6 +45,12 @@ enum Estado: string
         return in_array($nuevo, $this->siguientesPermitidos(), true);
     }
 
+    /** RF9 · Estados en los que todavía nadie empezó a atender la solicitud. */
+    public function esperaAtencion(): bool
+    {
+        return in_array($this, [self::Registrada, self::Asignada], true);
+    }
+
     public function aceptaTecnico(): bool
     {
         return in_array($this, [self::Registrada, self::Asignada, self::EnProceso], true);

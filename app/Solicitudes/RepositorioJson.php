@@ -6,6 +6,10 @@ use RuntimeException;
 
 /**
  * Guarda las solicitudes en un archivo JSON indexado por código.
+ *
+ * v1.1 (D-02): leer, modificar y escribir se hace con el archivo bloqueado de
+ * principio a fin. Antes solo se bloqueaba la escritura, y dos guardados al mismo
+ * tiempo (por ejemplo, un usuario y la tarea de vencimiento) podían perder datos.
  */
 final class RepositorioJson implements RepositorioSolicitudes
 {
@@ -13,9 +17,32 @@ final class RepositorioJson implements RepositorioSolicitudes
 
     public function guardar(Solicitud $solicitud): void
     {
-        $todas = $this->leerTodas();
-        $todas[$solicitud->codigo] = $solicitud->toArray();
-        $this->escribirTodas($todas);
+        $this->crearCarpeta();
+
+        $archivo = fopen($this->ruta, 'c+');
+        if ($archivo === false) {
+            throw new RuntimeException('No se pudo abrir el archivo de solicitudes: '.$this->ruta);
+        }
+
+        try {
+            if (! flock($archivo, LOCK_EX)) {
+                throw new RuntimeException('No se pudo bloquear el archivo de solicitudes: '.$this->ruta);
+            }
+
+            $todas = $this->decodificar(stream_get_contents($archivo));
+            $todas[$solicitud->codigo] = $solicitud->toArray();
+            $json = json_encode($todas, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+
+            ftruncate($archivo, 0);
+            rewind($archivo);
+            if (fwrite($archivo, $json) === false) {
+                throw new RuntimeException('No se pudo guardar el archivo de solicitudes: '.$this->ruta);
+            }
+            fflush($archivo);
+        } finally {
+            flock($archivo, LOCK_UN);
+            fclose($archivo);
+        }
     }
 
     public function buscar(string $codigo): ?Solicitud
@@ -30,14 +57,34 @@ final class RepositorioJson implements RepositorioSolicitudes
         return array_key_exists($codigo, $this->leerTodas());
     }
 
+    public function todas(): array
+    {
+        return array_values(array_map(fn (array $datos) => Solicitud::fromArray($datos), $this->leerTodas()));
+    }
+
     private function leerTodas(): array
     {
         if (! is_file($this->ruta)) {
             return [];
         }
 
-        $contenido = file_get_contents($this->ruta);
+        $archivo = fopen($this->ruta, 'r');
+        if ($archivo === false) {
+            return [];
+        }
 
+        try {
+            flock($archivo, LOCK_SH);
+
+            return $this->decodificar(stream_get_contents($archivo));
+        } finally {
+            flock($archivo, LOCK_UN);
+            fclose($archivo);
+        }
+    }
+
+    private function decodificar(string|false $contenido): array
+    {
         if ($contenido === false || trim($contenido) === '') {
             return [];
         }
@@ -51,18 +98,12 @@ final class RepositorioJson implements RepositorioSolicitudes
         return $datos;
     }
 
-    private function escribirTodas(array $todas): void
+    private function crearCarpeta(): void
     {
         $directorio = dirname($this->ruta);
 
         if (! is_dir($directorio) && ! mkdir($directorio, 0775, true) && ! is_dir($directorio)) {
             throw new RuntimeException('No se pudo crear la carpeta de datos: '.$directorio);
-        }
-
-        $json = json_encode($todas, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-
-        if (file_put_contents($this->ruta, $json, LOCK_EX) === false) {
-            throw new RuntimeException('No se pudo guardar el archivo de solicitudes: '.$this->ruta);
         }
     }
 }

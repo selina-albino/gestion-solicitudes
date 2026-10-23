@@ -5,15 +5,31 @@
 @section('contenido')
 <h1>Solicitud <span class="codigo">{{ $solicitud->codigo }}</span></h1>
 
+@if ($solicitud->estaVencida())
+    {{-- RF9: el texto "VENCIDA" acompaña al color, nunca solo el color. --}}
+    <div class="aviso aviso-error" role="status">
+        <strong>VENCIDA:</strong> esta solicitud {{ mb_strtolower($solicitud->prioridad->etiqueta()) }}
+        no fue atendida dentro de {{ $horasLimite }} horas
+        (plazo hasta {{ $limiteAtencion?->format('d/m/Y H:i') }}).
+        @if ($solicitud->estado->esperaAtencion())
+            Debe atenderse de inmediato.
+        @endif
+    </div>
+@endif
+
 <section class="tarjeta" aria-labelledby="titulo-datos">
     <h2 id="titulo-datos">Datos</h2>
     <dl class="datos">
-        <dt>Estado</dt>        <dd><strong>{{ $solicitud->estado->etiqueta() }}</strong></dd>
+        <dt>Estado</dt>        <dd><strong>{{ $solicitud->estado->etiqueta() }}</strong>@if ($solicitud->estaVencida()) · <strong class="etiqueta-vencida">Vencida</strong>@endif</dd>
         <dt>Solicitante</dt>   <dd>{{ $solicitud->solicitante }}</dd>
         <dt>Categoría</dt>     <dd>{{ $solicitud->categoria->etiqueta() }}</dd>
         <dt>Prioridad</dt>     <dd>{{ $solicitud->prioridad->etiqueta() }}</dd>
+        @if ($limiteAtencion)
+            <dt>Plazo de atención</dt>
+            <dd>Hasta <time datetime="{{ $limiteAtencion->format(DATE_ATOM) }}">{{ $limiteAtencion->format('d/m/Y H:i') }}</time> ({{ $horasLimite }} horas desde el registro)</dd>
+        @endif
         <dt>Técnico</dt>       <dd>{{ $solicitud->tecnico ?? 'Sin asignar' }}</dd>
-        <dt>Registrada</dt>    <dd><time datetime="{{ $solicitud->creadaEn }}">{{ \Illuminate\Support\Carbon::parse($solicitud->creadaEn)->format('d/m/Y H:i') }}</time></dd>
+        <dt>Registrada</dt>    <dd><time datetime="{{ $solicitud->creadaEn }}">{{ \Illuminate\Support\Carbon::parse($solicitud->creadaEn)->tz(config('app.timezone'))->format('d/m/Y H:i') }}</time></dd>
         <dt>Descripción</dt>   <dd>{{ $solicitud->descripcion }}</dd>
     </dl>
 </section>
@@ -86,7 +102,7 @@
             <tbody>
                 @foreach (array_reverse($solicitud->historial) as $cambio)
                     <tr>
-                        <td><time datetime="{{ $cambio['fecha'] }}">{{ \Illuminate\Support\Carbon::parse($cambio['fecha'])->format('d/m/Y H:i') }}</time></td>
+                        <td><time datetime="{{ $cambio['fecha'] }}">{{ \Illuminate\Support\Carbon::parse($cambio['fecha'])->tz(config('app.timezone'))->format('d/m/Y H:i') }}</time></td>
                         <td>{{ $cambio['accion'] }}</td>
                         <td>{{ $cambio['detalle'] }}</td>
                     </tr>
