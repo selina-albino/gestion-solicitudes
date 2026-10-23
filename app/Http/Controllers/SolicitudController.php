@@ -67,6 +67,8 @@ class SolicitudController extends Controller
         return view('solicitudes.show', [
             'solicitud' => $solicitud,
             'tecnicos' => $this->servicio->tecnicosDisponibles(),
+            'limiteAtencion' => $this->servicio->limiteAtencion($solicitud),
+            'horasLimite' => $this->servicio->horasLimiteAtencion(),
         ]);
     }
 

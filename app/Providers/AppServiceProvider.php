@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Solicitudes\GeneradorCodigo;
+use App\Solicitudes\PoliticaVencimiento;
+use App\Solicitudes\Prioridad;
 use App\Solicitudes\RepositorioJson;
 use App\Solicitudes\RepositorioSolicitudes;
 use App\Solicitudes\ServicioSolicitudes;
@@ -24,6 +26,12 @@ class AppServiceProvider extends ServiceProvider
                 $app->make(RepositorioSolicitudes::class),
                 new GeneradorCodigo,
                 config('solicitudes.tecnicos', []),
+                // Reloj de Laravel: en las pruebas se puede "adelantar el tiempo" con $this->travel().
+                fn () => now()->toImmutable(),
+                new PoliticaVencimiento(
+                    (int) config('solicitudes.vencimiento.horas', 4),
+                    Prioridad::from(config('solicitudes.vencimiento.prioridad', 'critica')),
+                ),
             ),
         );
     }
